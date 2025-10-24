@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>平方数マスター</title>
+    <style>
+        /* CSS */
+        body {
+            font-family: 'Arial', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888, #9b22a0);
+            color: #fff;
+            text-align: center;
+            overflow: auto;
+        }
+
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            max-width: 600px;
+            width: 90%;
+            color: #333;
+            animation: fadeIn 1s ease-out;
+            margin: 20px 0;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h1 {
+            color: #dc2743;
+            margin-bottom: 20px;
+            font-size: 2.5em;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            color: #e6683c;
+            margin-top: 30px;
+            margin-bottom: 15px;
+            font-size: 1.8em;
+        }
+
+        .section {
+            margin-bottom: 30px;
+        }
+
+        .section.hidden {
+            display: none;
+        }
+
+        .question-area {
+            background-color: #ffe0b2;
+            padding: 25px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .question-area p {
+            font-size: 2.2em;
+            font-weight: bold;
+            color: #d84315;
+            margin: 0 0 20px 0;
+        }
+
+        .choices-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .choice-btn {
+            background-color: #ffb74d;
+            color: #6d4c41;
+            border: none;
+            border-radius: 10px;
+            padding: 18px 0;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .choice-btn:hover {
+            background-color: #ffa726;
+            transform: translateY(-3px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+        }
+
+        .choice-btn:active {
+            background-color: #fb8c00;
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .message {
+            font-size: 1.3em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+
+        .message.correct {
+            color: #28a745;
+        }
+
+        .message.incorrect {
+            color: #dc3545;
+        }
+
+        .answer-input {
+            width: calc(100% - 40px);
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            border: 3px solid #ff7043;
+            border-radius: 10px;
+            font-size: 2em;
+            text-align: center;
+            color: #d84315;
+            background-color: #fff3e0;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+        }
+
+        .number-pad {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .num-btn {
+            background-color: #ff8a65;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 20px 0;
+            font-size: 1.8em;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .num-btn:hover {
+            background-color: #ff7043;
+            transform: translateY(-2px);
+        }
+
+        .num-btn:active {
+            background-color: #f4511e;
+            transform: translateY(0);
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+        }
+
+        .num-btn.clear, .num-btn.delete {
+            background-color: #ef5350;
+        }
+
+        .num-btn.clear:hover, .num-btn.delete:hover {
+            background-color: #e53935;
+        }
+
+        .submit-btn {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 15px 30px;
+            font-size: 1.5em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            margin-top: 10px;
+        }
+
+        .submit-btn:hover {
+            background-color: #43a047;
+        }
+
+        .treasure-keyword {
+            font-size: 3em;
+            font-weight: bold;
+            color: #ffeb3b;
+            text-shadow: 3px 3px 6px rgba(0, 0, 0, 0.4);
+            margin: 30px 0;
+            animation: bounce 1s infinite;
+        }
+
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        .btn {
+            background-color: #2196F3;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 25px;
+            font-size: 1.2em;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            margin-top: 20px;
+        }
+
+        .btn:hover {
+            background-color: #1976D2;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>平方数マスター</h1>
+        <div id="practice-section" class="section">
+            <h2>練習モード</h2>
+            <p>1×1から20×20の平方数をマスターしよう！</p>
+            <div id="question-area-practice" class="question-area">
+                <p id="question-practice"></p>
+                <div id="choices-practice" class="choices-grid"></div>
+            </div>
+            <p id="message-practice" class="message"></p>
+        </div>
+
+        <div id="main-section" class="section hidden">
+            <h2>本番モード</h2>
+            <p>全問正解して宝のキーワードをゲットしよう！</p>
+            <div id="question-area-main" class="question-area">
+                <p id="question-main"></p>
+                <input type="text" id="answer-input" class="answer-input" inputmode="numeric" pattern="[0-9]*" readonly>
+                <div class="number-pad">
+                    <button class="num-btn">1</button>
+                    <button class="num-btn">2</button>
+                    <button class="num-btn">3</button>
+                    <button class="num-btn">4</button>
+                    <button class="num-btn">5</button>
+                    <button class="num-btn">6</button>
+                    <button class="num-btn">7</button>
+                    <button class="num-btn">8</button>
+                    <button class="num-btn">9</button>
+                    <button class="num-btn clear">C</button>
+                    <button class="num-btn">0</button>
+                    <button class="num-btn delete">DEL</button>
+                </div>
+                <button id="submit-answer" class="submit-btn">答える</button>
+            </div>
+            <p id="message-main" class="message"></p>
+        </div>
+
+        <div id="result-section" class="section hidden">
+            <h2>おめでとう！</h2>
+            <p>全問正解です！宝のキーワードは...</p>
+            <p class="treasure-keyword">るす</p>
+            <button id="restart-app" class="btn">もう一度遊ぶ</button>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript
+        // DOM要素の取得
+        const practiceSection = document.getElementById('practice-section');
+        const mainSection = document.getElementById('main-section');
+        const resultSection = document.getElementById('result-section');
+
+        const questionPractice = document.getElementById('question-practice');
+        const choicesPractice = document.getElementById('choices-practice');
+        const messagePractice = document.getElementById('message-practice');
+
+        const questionMain = document.getElementById('question-main');
+        const answerInput = document.getElementById('answer-input');
+        const numberPad = document.querySelector('.number-pad');
+        const submitAnswerBtn = document.getElementById('submit-answer');
+        const messageMain = document.getElementById('message-main');
+
+        const restartAppBtn = document.getElementById('restart-app');
+
+        // ゲームの状態変数
+        let currentPracticeIndex = 0; // 現在の練習問題の出題番号 (1から20)
+        const MAX_PRACTICE_NUMBER = 20; // 練習問題の最大数 (20x20まで)
+
+        let currentMainIndex = 0; // 現在の本番問題の出題番号 (1から20)
+        const MAX_MAIN_NUMBER = 20; // 本番問題の最大数 (20x20まで)
+
+        // アプリの初期化
+        function initializeApp() {
+            practiceSection.classList.remove('hidden');
+            mainSection.classList.add('hidden');
+            resultSection.classList.add('hidden');
+
+            currentPracticeIndex = 1; // 1x1から始める
+            currentMainIndex = 1;     // 1x1から始める
+
+            generatePracticeQuestion();
+            messagePractice.textContent = '';
+            messageMain.textContent = '';
+            answerInput.value = '';
+        }
+
+        // 練習問題の生成
+        function generatePracticeQuestion() {
+            if (currentPracticeIndex > MAX_PRACTICE_NUMBER) {
+                // 練習問題が全て終了したら本番モードへ移行
+                startMainMode();
+                return;
+            }
+
+            const number = currentPracticeIndex;
+            questionPractice.textContent = `${number} × ${number} = ?`;
+
+            const correctAnswer = number * number;
+            const choices = generateChoices(correctAnswer);
+
+            choicesPractice.innerHTML = '';
+            choices.forEach(choice => {
+                const button = document.createElement('button');
+                button.textContent = choice;
+                button.classList.add('choice-btn');
+                button.addEventListener('click', () => checkPracticeAnswer(choice, correctAnswer));
+                choicesPractice.appendChild(button);
+            });
+        }
+
+        // 選択肢の生成 (正解 + 誤答3つ)
+        function generateChoices(correctAnswer) {
+            const choices = new Set();
+            choices.add(correctAnswer);
+
+            while (choices.size < 4) {
+                let wrongAnswer = correctAnswer + Math.floor(Math.random() * 20) - 10;
+                if (wrongAnswer <= 0) wrongAnswer = 1;
+                if (wrongAnswer === correctAnswer) continue;
+                choices.add(wrongAnswer);
+            }
+
+            return Array.from(choices).sort(() => Math.random() - 0.5); // シャッフルして返す
+        }
+
+        // 練習問題の回答チェック
+        function checkPracticeAnswer(selectedAnswer, correctAnswer) {
+            if (selectedAnswer === correctAnswer) {
+                messagePractice.textContent = '正解！';
+                messagePractice.classList.remove('incorrect');
+                messagePractice.classList.add('correct');
+                currentPracticeIndex++; // 次の問題へ
+                setTimeout(() => {
+                    messagePractice.textContent = '';
+                    generatePracticeQuestion();
+                }, 1000);
+            } else {
+                messagePractice.textContent = `残念！正解は ${correctAnswer} でした。`;
+                messagePractice.classList.remove('correct');
+                messagePractice.classList.add('incorrect');
+                currentPracticeIndex = 1; // 間違えたら1×1からやり直し
+                setTimeout(() => {
+                    messagePractice.textContent = '';
+                    generatePracticeQuestion();
+                }, 2000);
+            }
+        }
+
+        // 本番モード開始
+        function startMainMode() {
+            practiceSection.classList.add('hidden');
+            mainSection.classList.remove('hidden');
+            currentMainIndex = 1; // 1x1から開始
+            answerInput.value = '';
+            messageMain.textContent = '';
+            generateMainQuestion();
+        }
+
+        // 本番問題の生成
+        function generateMainQuestion() {
+            if (currentMainIndex > MAX_MAIN_NUMBER) {
+                // 本番問題が全て終了したら結果表示
+                showResult();
+                return;
+            }
+
+            const number = currentMainIndex;
+            questionMain.textContent = `${number} × ${number} = ?`;
+            answerInput.value = ''; // 入力フィールドをクリア
+            messageMain.textContent = ''; // メッセージをクリア
+        }
+
+        // 数字パッドのイベントリスナー
+        numberPad.addEventListener('click', (event) => {
+            const target = event.target;
+            if (target.classList.contains('num-btn')) {
+                if (target.classList.contains('clear')) {
+                    answerInput.value = '';
+                } else if (target.classList.contains('delete')) {
+                    answerInput.value = answerInput.value.slice(0, -1);
+                } else {
+                    answerInput.value += target.textContent;
+                }
+            }
+        });
+
+        // 本番問題の回答チェック
+        submitAnswerBtn.addEventListener('click', () => {
+            const userAnswer = parseInt(answerInput.value);
+            const correctAnswer = currentMainIndex * currentMainIndex;
+
+            if (isNaN(userAnswer)) {
+                messageMain.textContent = '数字を入力してください！';
+                messageMain.classList.remove('correct');
+                messageMain.classList.add('incorrect');
+                return;
+            }
+
+            if (userAnswer === correctAnswer) {
+                messageMain.textContent = '正解！';
+                messageMain.classList.remove('incorrect');
+                messageMain.classList.add('correct');
+                currentMainIndex++; // 次の問題へ
+
+                setTimeout(() => {
+                    generateMainQuestion();
+                }, 1000);
+            } else {
+                messageMain.textContent = `残念！正解は ${correctAnswer} でした。`;
+                messageMain.classList.remove('correct');
+                messageMain.classList.add('incorrect');
+                // 間違えたら最初に戻る (練習モードからやり直し)
+                setTimeout(() => {
+                    initializeApp();
+                }, 2000);
+            }
+        });
+
+        // 結果表示 (宝のキーワード)
+        function showResult() {
+            mainSection.classList.add('hidden');
+            resultSection.classList.remove('hidden');
+        }
+
+        // アプリケーション開始
+        initializeApp();
+
+        // リスタートボタンのイベントリスナー
+        restartAppBtn.addEventListener('click', initializeApp);
+    </script>
+</body>
+</html>
